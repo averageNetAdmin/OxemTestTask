@@ -13,7 +13,7 @@ class Farm {
 
     // add one animal to farm
     function addAnimal($animal_type) {
-        if (gettype($animal_type) == "string") {
+        if (gettype($animal_type) == "string" && class_exists($animal_type)) {
             $this->animals[] = new $animal_type(++$this->lastAnimalId);
         } else if ($animal_type instanceof Animal) {
             $this->animals[] = $animal_type;
