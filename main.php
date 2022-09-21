@@ -6,12 +6,21 @@ $farm->addAnimals('Cow', 10);
 $farm->addAnimals('Chiken', 20);
 $farm->printAnimalsInfo();
 $farm->simulateDays(7);
-$farm->printNumberOfCollectedProducts();
+$collected = $farm->countNumberOfCollectedProducts();
+echo "Collected: ";
+foreach ($collected as $productType => $amount) {
+    echo $amount . " of " . $productType . ", ";
+}
+echo "\n";
 
 $farm->addAnimals('Cow');
 $farm->addAnimals('Chiken', 5);
 $farm->printAnimalsInfo();
 $farm->simulateDays(7);
-$farm->printNumberOfCollectedProducts();
+$collected = $farm->countNumberOfCollectedProducts();
+foreach ($collected as $productType => $amount) {
+    echo "Collected: " . $amount . " of " . $productType . ", ";
+}
+echo "\n";
 
 ?>

@@ -8,14 +8,14 @@ spl_autoload_register("my_autoloader");
 
 class Farm {
 
-    public $animals = array(), $products = array(), $currentDay = 0;
+    private $animals = array(), $products = array();
     private $lastAnimalId;
 
     // add one animal to farm
     function addAnimal($animal_type) {
         if (gettype($animal_type) == "string") {
             $this->animals[] = new $animal_type(++$this->lastAnimalId);
-        } else if (gettype($animal_type) == "object" && $animal_type instanceof Animal) {
+        } else if ($animal_type instanceof Animal) {
             $this->animals[] = $animal_type;
         } else {
             echo "invalid animal or animal type " . $animal_type . " \n";
@@ -34,7 +34,6 @@ class Farm {
     // warning: don't collect in day of start, but collect in last day
     function simulateDays(int $number) {
         for ($i = 0; $i < $number; ++$i) {
-            $this->nextDay();
             $this->collectProducts();
         }
     }
@@ -43,7 +42,7 @@ class Farm {
     function printAnimalsInfo() {
         $animalsNumbers = array();
         foreach($this->animals as $animal) {
-            $type = get_class($animal);
+            $type = $animal->getClassName();
             if (!array_key_exists($type, $animalsNumbers)) {
                 $animalsNumbers[$type] = 0;
             }
@@ -58,34 +57,23 @@ class Farm {
 
     // collect products from all animals in farm
     function collectProducts() {
-        echo "Day" . $this->currentDay . "\n";
+    
         foreach($this->animals as $animal) {
-            $prod = $animal->getProduct();
-            if (!($prod instanceof Product)) {
-                echo "invalid product " . $prod . "\n";
-                return;
-            }
-            $type = get_class($prod);
-            if (!array_key_exists($type, $this->products)) {
-                $this->products[$type] = new $type(0);
-            }
-            $obj = $this->products[$type];
-            $obj->append($prod->getAmount());
+            $this->products[] = $animal->getProduct();
         }
-    }
-
-    // for better visualization
-    function nextDay() {
-        $this->currentDay++;
     }
 
     // print all collected products on farm
-    function printNumberOfCollectedProducts() {   
-        echo "Collected ";
+    function countNumberOfCollectedProducts(): array {   
+        $productsTypes = array();
         foreach($this->products as $product) {
-            echo $product->getAmount() . " " . $product->getUnit() . ", ";
+            $type = $product->getUnit();
+            if (!array_key_exists($type, $productsTypes)) {
+                $productsTypes[$type] = 0;
+            }
+            $productsTypes[$type] += $product->getAmount();
         }
-        echo "in " . $this->currentDay . " days\n";
+        return $productsTypes;
     }
 
 }
