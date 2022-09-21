@@ -18,8 +18,9 @@ $farm->addAnimals('Chiken', 5);
 $farm->printAnimalsInfo();
 $farm->simulateDays(7);
 $collected = $farm->countNumberOfCollectedProducts();
+echo "Collected: ";
 foreach ($collected as $productType => $amount) {
-    echo "Collected: " . $amount . " of " . $productType . ", ";
+    echo $amount . " of " . $productType . ", ";
 }
 echo "\n";
 
